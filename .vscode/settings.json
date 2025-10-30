@@ -1,0 +1,21 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "css.format.spaceAroundSelectorSeparator": true,
+  "[json][jsonc][jsonl]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript][javascriptreact][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.endOfLine": "auto",
+  "prettier.experimentalTernaries": true,
+  "prettier.singleAttributePerLine": true,
+  "eslint.lintTask.enable": true,
+  "eslint.useESLintClass": true,
+  "eslint.codeAction.disableRuleComment": {
+    "commentStyle": "block"
+  },
+}
