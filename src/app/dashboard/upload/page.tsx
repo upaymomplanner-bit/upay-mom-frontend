@@ -73,16 +73,17 @@ export default function UploadPage() {
 
     if (result.error) {
       setStatus({ type: "error", message: result.error });
+      setUploading(false);
     } else {
-      setStatus({
-        type: "success",
-        message:
-          "Transcript processed successfully! Tasks and goals have been extracted.",
-      });
-      setFile(null);
-    }
+      // Store parsed data in session storage for review
+      sessionStorage.setItem(
+        "pending-meeting-data",
+        JSON.stringify(result.data)
+      );
 
-    setUploading(false);
+      // Navigate to review page
+      window.location.href = "/dashboard/upload/review";
+    }
   };
 
   return (
