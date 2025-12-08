@@ -39,6 +39,7 @@ export interface TaskGroup {
 export interface MeetingDetails {
   meeting_title: string | null;
   meeting_date: string;
+  meeting_type?: string;
 }
 
 export interface ParsedMeetingResponse {

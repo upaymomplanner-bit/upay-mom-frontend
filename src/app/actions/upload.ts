@@ -25,6 +25,18 @@ export async function uploadTranscript(formData: FormData) {
   try {
     // Forward to external backend for processing
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    // Backend requires meeting_details field
+    if (!formData.has("meeting_details")) {
+      formData.append(
+        "meeting_details",
+        JSON.stringify({
+          meeting_title: "Uploaded Meeting",
+          meeting_date: new Date().toISOString().split("T")[0],
+        })
+      );
+    }
+
     const response = await fetch(`${backendUrl}/transcripts/process`, {
       method: "POST",
       body: formData,
@@ -58,15 +70,28 @@ export async function saveMeetingData(meetingData: SaveMeetingPayload) {
   try {
     // Send confirmed data to backend for saving
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    // Ensure meeting_type is present
+    const payload = {
+      ...meetingData,
+      meeting_details: {
+        ...meetingData.meeting_details,
+        meeting_type: meetingData.meeting_details.meeting_type || "General",
+      },
+      user_id: user.id,
+    };
+
+    console.log(
+      "Saving meeting data with payload:",
+      JSON.stringify(payload, null, 2)
+    );
+
     const response = await fetch(`${backendUrl}/transcripts/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...meetingData,
-        user_id: user.id,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -92,6 +117,7 @@ export async function getUsers() {
   const supabase = await createClient();
 
   try {
+    console.log("Fetching users from profiles table...");
     const { data: users, error } = await supabase
       .from("profiles")
       .select("id, full_name, email, department_id")
@@ -99,6 +125,52 @@ export async function getUsers() {
 
     if (error) throw error;
 
+    // Self-healing: If no users found, check if current user needs a profile
+    if (!users || users.length === 0) {
+      console.log(
+        "No profiles found. Checking if current user needs a profile..."
+      );
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Check if profile exists (double check)
+        const { data: existingProfile } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("id", user.id)
+          .single();
+
+        if (!existingProfile) {
+          console.log("Creating profile for current user...");
+          const { error: insertError } = await supabase
+            .from("profiles")
+            .insert({
+              id: user.id,
+              email: user.email,
+              full_name:
+                user.user_metadata?.full_name ||
+                user.email?.split("@")[0] ||
+                "User",
+            });
+
+          if (insertError) {
+            console.error("Failed to create profile:", insertError);
+          } else {
+            // Refetch users
+            const { data: newUsers } = await supabase
+              .from("profiles")
+              .select("id, full_name, email, department_id")
+              .order("full_name");
+
+            return { success: true, data: newUsers };
+          }
+        }
+      }
+    }
+
+    console.log(`Found ${users?.length || 0} users`);
     return { success: true, data: users };
   } catch (error: any) {
     console.error("Get users error:", error);
