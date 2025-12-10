@@ -10,6 +10,7 @@ import {
   Clock,
   BarChart3,
 } from "lucide-react";
+import { AnalyticsDashboard } from "@/components/analytics";
 
 export default async function AnalyticsPage() {
   const supabase = await createClient();
@@ -211,33 +212,13 @@ export default async function AnalyticsPage() {
         </Card>
       </div>
 
-      {/* Department Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Department Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Building2 className="h-8 w-8 text-muted-foreground" />
-                <div>
-                  <p className="font-medium">Total Departments</p>
-                  <p className="text-sm text-muted-foreground">
-                    Across the organization
-                  </p>
-                </div>
-              </div>
-              <span className="text-2xl font-bold">
-                {totalDepartments || 0}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground text-center">
-              Department-specific analytics coming soon
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* City & Department Analytics (Client-side with TanStack Query) */}
+      <div className="pt-4 border-t">
+        <h3 className="text-xl font-semibold mb-4">
+          City & Department Analytics
+        </h3>
+        <AnalyticsDashboard />
+      </div>
     </div>
   );
 }

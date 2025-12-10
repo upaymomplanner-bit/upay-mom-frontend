@@ -103,7 +103,7 @@ export default async function MeetingsPage() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {meeting.department?.name || "N/A"}
+                          {meeting.department?.[0]?.name || "N/A"}
                         </div>
                       </div>
                     </div>
@@ -146,7 +146,7 @@ export default async function MeetingsPage() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {meeting.department?.name || "N/A"}
+                          {meeting.department?.[0]?.name || "N/A"}
                         </div>
                       </div>
                     </div>
