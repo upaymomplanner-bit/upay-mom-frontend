@@ -7,6 +7,14 @@ import type {
   SaveMeetingPayload,
 } from "@/types/meeting";
 
+async function getAuthToken() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.access_token;
+}
+
 export async function uploadTranscript(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -15,6 +23,11 @@ export async function uploadTranscript(formData: FormData) {
 
   if (!user) {
     return { error: "Unauthorized" };
+  }
+
+  const accessToken = await getAuthToken();
+  if (!accessToken) {
+    return { error: "No valid session" };
   }
 
   const file = formData.get("file") as File;
@@ -39,6 +52,9 @@ export async function uploadTranscript(formData: FormData) {
 
     const response = await fetch(`${backendUrl}/transcripts/process`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: formData,
     });
 
@@ -67,6 +83,11 @@ export async function saveMeetingData(meetingData: SaveMeetingPayload) {
     return { error: "Unauthorized" };
   }
 
+  const accessToken = await getAuthToken();
+  if (!accessToken) {
+    return { error: "No valid session" };
+  }
+
   try {
     // Send confirmed data to backend for saving
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -90,6 +111,7 @@ export async function saveMeetingData(meetingData: SaveMeetingPayload) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(payload),
     });

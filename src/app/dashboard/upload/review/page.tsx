@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   Loader2,
   Save,
+  Plus,
 } from "lucide-react";
 import type {
   ParsedMeetingResponse,
@@ -136,6 +137,67 @@ export default function ReviewPage() {
     setMeetingData({
       ...meetingData,
       task_groups: updatedGroups,
+    });
+  };
+
+  const handleUpdateGroup = (
+    groupIndex: number,
+    updatedGroup: EditableTaskGroup
+  ) => {
+    if (!meetingData) return;
+
+    const updatedGroups = [...meetingData.task_groups];
+    updatedGroups[groupIndex] = updatedGroup;
+
+    setMeetingData({
+      ...meetingData,
+      task_groups: updatedGroups,
+    });
+  };
+
+  const handleAddTask = (groupIndex: number) => {
+    if (!meetingData) return;
+
+    const newTask: EditableTask = {
+      id: generateTempId(),
+      title: "New Task",
+      details: {
+        description: "",
+        checklist_items: [],
+      },
+      assignments: [],
+      due_date: null,
+      startDateTime: new Date().toISOString(),
+      priority: "3",
+    };
+
+    const updatedGroups = [...meetingData.task_groups];
+    updatedGroups[groupIndex].tasks.push(newTask);
+
+    setMeetingData({
+      ...meetingData,
+      task_groups: updatedGroups,
+      action_items_count: meetingData.action_items_count + 1,
+    });
+  };
+
+  const handleAddGroup = () => {
+    if (!meetingData) return;
+
+    const newGroup: EditableTaskGroup = {
+      plan_association: {
+        association_type: "new",
+        plan_title: "New Plan",
+        plan_reference: null,
+        rationale: "",
+      },
+      tasks: [],
+      group_description: "New task group",
+    };
+
+    setMeetingData({
+      ...meetingData,
+      task_groups: [...meetingData.task_groups, newGroup],
     });
   };
 
@@ -281,6 +343,13 @@ export default function ReviewPage() {
           <h3 className="text-2xl font-semibold">
             Extracted Tasks ({meetingData.action_items_count} total)
           </h3>
+          <Button
+            variant="outline"
+            onClick={handleAddGroup}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Group
+          </Button>
         </div>
 
         {meetingData.task_groups.map((group, groupIndex) => (
@@ -290,6 +359,8 @@ export default function ReviewPage() {
             users={users}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateGroup={handleUpdateGroup}
+            onAddTask={handleAddTask}
             groupIndex={groupIndex}
           />
         ))}
