@@ -23,7 +23,10 @@ export default function ReviewLoading() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="space-y-2">
+              <div
+                key={i}
+                className="space-y-2"
+              >
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-5 w-32" />
               </div>
@@ -38,7 +41,7 @@ export default function ReviewLoading() {
           <Skeleton className="h-7 w-40" />
           <Skeleton className="h-5 w-8 rounded-full" />
         </div>
-        
+
         <div className="grid gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
@@ -68,7 +71,7 @@ export default function ReviewLoading() {
           <Skeleton className="h-7 w-48" />
           <Skeleton className="h-5 w-8 rounded-full" />
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2">
           {Array.from({ length: 2 }).map((_, i) => (
             <Card key={i}>

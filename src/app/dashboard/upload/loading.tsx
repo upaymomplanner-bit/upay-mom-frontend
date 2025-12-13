@@ -29,7 +29,7 @@ export default function UploadLoading() {
           <CardContent className="space-y-6">
             {/* File Input Label Skeleton */}
             <Skeleton className="h-4 w-20" />
-            
+
             {/* Drop Zone Skeleton */}
             <div className="border-2 border-dashed rounded-lg p-12">
               <div className="flex flex-col items-center gap-4">
@@ -54,7 +54,10 @@ export default function UploadLoading() {
           <CardContent>
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-start gap-2">
+                <div
+                  key={i}
+                  className="flex items-start gap-2"
+                >
                   <Skeleton className="h-4 w-4 mt-0.5" />
                   <Skeleton className="h-4 w-full" />
                 </div>
