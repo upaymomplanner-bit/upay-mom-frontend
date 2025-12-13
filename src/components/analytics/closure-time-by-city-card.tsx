@@ -45,7 +45,7 @@ export function ClosureTimeByCityCard({
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="animate-pulse h-10 bg-gray-200 rounded"
+                className="animate-pulse h-10 bg-muted rounded"
               ></div>
             ))}
           </div>
@@ -89,18 +89,12 @@ export function ClosureTimeByCityCard({
                 <TableHead className="text-center">Completed</TableHead>
                 <TableHead className="text-center">Avg Time</TableHead>
                 <TableHead className="text-center">Median</TableHead>
-                <TableHead className="text-center text-red-600">
+                <TableHead className="text-center text-destructive">
                   Urgent
                 </TableHead>
-                <TableHead className="text-center text-orange-600">
-                  Important
-                </TableHead>
-                <TableHead className="text-center text-yellow-600">
-                  Medium
-                </TableHead>
-                <TableHead className="text-center text-green-600">
-                  Low
-                </TableHead>
+                <TableHead className="text-center">Important</TableHead>
+                <TableHead className="text-center">Medium</TableHead>
+                <TableHead className="text-center">Low</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

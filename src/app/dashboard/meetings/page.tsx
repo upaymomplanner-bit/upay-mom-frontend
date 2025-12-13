@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Users } from "lucide-react";
 import { format } from "date-fns";
 
@@ -13,20 +14,18 @@ export default async function MeetingsPage() {
       `
       id,
       title,
-      scheduled_at,
-      duration_minutes,
+      date,
+      summary,
       status,
-      meeting_type,
-      department:departments(name)
+      host:profiles!meetings_host_id_fkey(full_name, email)
     `
     )
-    .order("scheduled_at", { ascending: false });
+    .order("date", { ascending: false });
 
   const now = new Date();
   const upcomingMeetings =
-    meetings?.filter((m) => new Date(m.scheduled_at) >= now) || [];
-  const pastMeetings =
-    meetings?.filter((m) => new Date(m.scheduled_at) < now) || [];
+    meetings?.filter((m) => new Date(m.date) >= now) || [];
+  const pastMeetings = meetings?.filter((m) => new Date(m.date) < now) || [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -95,21 +94,21 @@ export default async function MeetingsPage() {
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          {format(new Date(meeting.scheduled_at), "PPP")}
+                          {format(new Date(meeting.date), "PPP")}
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
-                          {format(new Date(meeting.scheduled_at), "p")}
+                          {format(new Date(meeting.date), "p")}
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {meeting.department?.[0]?.name || "N/A"}
+                          {meeting.host?.[0].full_name ||
+                            meeting.host?.[0].email ||
+                            "N/A"}
                         </div>
                       </div>
                     </div>
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                      {meeting.status}
-                    </span>
+                    <Badge variant="secondary">{meeting.status}</Badge>
                   </div>
                 </CardHeader>
               </Card>
@@ -138,21 +137,21 @@ export default async function MeetingsPage() {
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          {format(new Date(meeting.scheduled_at), "PPP")}
+                          {format(new Date(meeting.date), "PPP")}
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
-                          {format(new Date(meeting.scheduled_at), "p")}
+                          {format(new Date(meeting.date), "p")}
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {meeting.department?.[0]?.name || "N/A"}
+                          {meeting.host?.[0].full_name ||
+                            meeting.host?.[0].email ||
+                            "N/A"}
                         </div>
                       </div>
                     </div>
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
-                      {meeting.status}
-                    </span>
+                    <Badge variant="outline">{meeting.status}</Badge>
                   </div>
                 </CardHeader>
               </Card>

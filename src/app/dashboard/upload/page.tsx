@@ -11,12 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertCircle,
   CheckCircle2,
   UploadCloud,
   FileText,
   X,
+  Info,
 } from "lucide-react";
 
 export default function UploadPage() {
@@ -97,10 +99,10 @@ export default function UploadPage() {
 
       <div className="max-w-3xl">
         <Card className="border-2">
-          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950">
+          <CardHeader className="bg-muted/50">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-500 rounded-lg">
-                <UploadCloud className="h-6 w-6 text-white" />
+              <div className="p-2 bg-primary rounded-lg">
+                <UploadCloud className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
                 <CardTitle>Upload Meeting Minutes</CardTitle>
@@ -119,13 +121,13 @@ export default function UploadPage() {
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
                 isDragging
-                  ? "border-green-500 bg-green-50 dark:bg-green-950"
-                  : "border-gray-300 hover:border-green-400 hover:bg-gray-50 dark:hover:bg-gray-900"
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50 hover:bg-muted/50"
               }`}
             >
               <div className="flex flex-col items-center gap-4">
-                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-full">
-                  <UploadCloud className="h-12 w-12 text-gray-400" />
+                <div className="p-4 bg-muted rounded-full">
+                  <UploadCloud className="h-12 w-12 text-muted-foreground" />
                 </div>
                 <div>
                   <p className="text-lg font-medium">
@@ -157,13 +159,11 @@ export default function UploadPage() {
 
             {/* Selected File Display */}
             {file && (
-              <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-                <FileText className="h-10 w-10 text-green-600" />
+              <div className="flex items-center gap-3 p-4 bg-accent border border-border rounded-lg">
+                <FileText className="h-10 w-10 text-primary" />
                 <div className="flex-1">
-                  <p className="font-medium text-green-900 dark:text-green-100">
-                    {file.name}
-                  </p>
-                  <p className="text-sm text-green-700 dark:text-green-300">
+                  <p className="font-medium">{file.name}</p>
+                  <p className="text-sm text-muted-foreground">
                     {(file.size / 1024).toFixed(2)} KB
                   </p>
                 </div>
@@ -171,7 +171,6 @@ export default function UploadPage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setFile(null)}
-                  className="text-green-600 hover:text-green-700 hover:bg-green-100"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -180,39 +179,19 @@ export default function UploadPage() {
 
             {/* Status Messages */}
             {status && (
-              <div
-                className={`flex items-start gap-3 p-4 rounded-lg ${
-                  status.type === "success"
-                    ? "bg-green-50 border border-green-200 dark:bg-green-950 dark:border-green-800"
-                    : "bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-800"
-                }`}
+              <Alert
+                variant={status.type === "error" ? "destructive" : "default"}
               >
                 {status.type === "success" ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-4 w-4" />
                 ) : (
-                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="h-4 w-4" />
                 )}
-                <div>
-                  <p
-                    className={`font-medium ${
-                      status.type === "success"
-                        ? "text-green-900 dark:text-green-100"
-                        : "text-red-900 dark:text-red-100"
-                    }`}
-                  >
-                    {status.type === "success" ? "Success!" : "Error"}
-                  </p>
-                  <p
-                    className={`text-sm ${
-                      status.type === "success"
-                        ? "text-green-700 dark:text-green-300"
-                        : "text-red-700 dark:text-red-300"
-                    }`}
-                  >
-                    {status.message}
-                  </p>
-                </div>
-              </div>
+                <AlertTitle>
+                  {status.type === "success" ? "Success!" : "Error"}
+                </AlertTitle>
+                <AlertDescription>{status.message}</AlertDescription>
+              </Alert>
             )}
 
             {/* Upload Button */}
@@ -236,36 +215,40 @@ export default function UploadPage() {
             </Button>
 
             {/* Instructions */}
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-                How it works:
-              </h4>
-              <ol className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
-                <li className="flex items-start gap-2">
-                  <span className="font-bold">1.</span>
-                  <span>Upload your meeting minutes as a PDF or TXT file</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold">2.</span>
-                  <span>
-                    Our AI will analyze the transcript and extract action items
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold">3.</span>
-                  <span>
-                    Tasks and goals will be automatically created and assigned
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold">4.</span>
-                  <span>
-                    Review and manage extracted items in the Tasks and Goals
-                    sections
-                  </span>
-                </li>
-              </ol>
-            </div>
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertTitle>How it works</AlertTitle>
+              <AlertDescription>
+                <ol className="space-y-2 mt-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">1.</span>
+                    <span>
+                      Upload your meeting minutes as a PDF or TXT file
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">2.</span>
+                    <span>
+                      Our AI will analyze the transcript and extract action
+                      items
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">3.</span>
+                    <span>
+                      Tasks and goals will be automatically created and assigned
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">4.</span>
+                    <span>
+                      Review and manage extracted items in the Tasks and Goals
+                      sections
+                    </span>
+                  </li>
+                </ol>
+              </AlertDescription>
+            </Alert>
           </CardContent>
         </Card>
       </div>

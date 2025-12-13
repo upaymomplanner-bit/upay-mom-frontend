@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -78,10 +79,10 @@ export function LoginForm() {
       <form onSubmit={handleLogin}>
         <CardContent className="grid gap-4">
           {error && (
-            <div className="flex items-center gap-2 text-sm text-red-500 bg-red-50 p-2 rounded">
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <span>{error}</span>
-            </div>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>

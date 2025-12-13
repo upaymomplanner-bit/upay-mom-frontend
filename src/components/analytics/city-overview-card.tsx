@@ -28,8 +28,8 @@ export function CityOverviewCard({ data, isLoading }: CityOverviewCardProps) {
                 key={i}
                 className="animate-pulse"
               >
-                <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                <div className="h-2 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-muted rounded w-1/4 mb-2"></div>
+                <div className="h-2 bg-muted rounded w-full"></div>
               </div>
             ))}
           </div>
@@ -84,31 +84,17 @@ export function CityOverviewCard({ data, isLoading }: CityOverviewCardProps) {
               />
 
               <div className="flex flex-wrap gap-2 text-xs">
-                <Badge
-                  variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
-                >
+                <Badge variant="default">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   {city.completed_tasks} done
                 </Badge>
-                <Badge
-                  variant="outline"
-                  className="bg-blue-50 text-blue-700 border-blue-200"
-                >
+                <Badge variant="secondary">
                   <Clock className="h-3 w-3 mr-1" />
                   {city.in_progress_tasks} in progress
                 </Badge>
-                <Badge
-                  variant="outline"
-                  className="bg-gray-50 text-gray-700 border-gray-200"
-                >
-                  {city.todo_tasks} todo
-                </Badge>
+                <Badge variant="outline">{city.todo_tasks} todo</Badge>
                 {city.overdue_tasks > 0 && (
-                  <Badge
-                    variant="outline"
-                    className="bg-red-50 text-red-700 border-red-200"
-                  >
+                  <Badge variant="destructive">
                     <AlertTriangle className="h-3 w-3 mr-1" />
                     {city.overdue_tasks} overdue
                   </Badge>

@@ -6,7 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { EditableTask } from "@/types/meeting";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { EditableTask, ChecklistItem } from "@/types/meeting";
 import {
   Pencil,
   Trash2,
@@ -14,6 +21,8 @@ import {
   CheckSquare,
   User,
   AlertCircle,
+  Plus,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -33,12 +42,13 @@ export function TaskReviewCard({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityVariant = (
+    priority: string
+  ): "default" | "secondary" | "destructive" | "outline" => {
     const priorityNum = parseInt(priority);
-    if (priorityNum <= 2) return "bg-red-100 text-red-800 border-red-300";
-    if (priorityNum === 3)
-      return "bg-yellow-100 text-yellow-800 border-yellow-300";
-    return "bg-green-100 text-green-800 border-green-300";
+    if (priorityNum <= 2) return "destructive";
+    if (priorityNum === 3) return "secondary";
+    return "outline";
   };
 
   const getPriorityLabel = (priority: string) => {
@@ -62,14 +72,49 @@ export function TaskReviewCard({
     setIsEditing(false);
   };
 
+  const handleUpdateChecklistItem = (index: number, title: string) => {
+    const updatedChecklist = [...editedTask.details.checklist_items];
+    updatedChecklist[index] = { title };
+    setEditedTask({
+      ...editedTask,
+      details: {
+        ...editedTask.details,
+        checklist_items: updatedChecklist,
+      },
+    });
+  };
+
+  const handleAddChecklistItem = () => {
+    setEditedTask({
+      ...editedTask,
+      details: {
+        ...editedTask.details,
+        checklist_items: [...editedTask.details.checklist_items, { title: "" }],
+      },
+    });
+  };
+
+  const handleRemoveChecklistItem = (index: number) => {
+    const updatedChecklist = editedTask.details.checklist_items.filter(
+      (_, i) => i !== index
+    );
+    setEditedTask({
+      ...editedTask,
+      details: {
+        ...editedTask.details,
+        checklist_items: updatedChecklist,
+      },
+    });
+  };
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             {isEditing ? (
-              <div className="space-y-3">
-                <div>
+              <div className="space-y-4">
+                <div className="space-y-2">
                   <Label htmlFor={`task-title-${task.id}`}>Task Title</Label>
                   <Input
                     id={`task-title-${task.id}`}
@@ -80,7 +125,7 @@ export function TaskReviewCard({
                     className="font-semibold"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor={`task-desc-${task.id}`}>Description</Label>
                   <Textarea
                     id={`task-desc-${task.id}`}
@@ -97,15 +142,32 @@ export function TaskReviewCard({
                     rows={3}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`task-priority-${task.id}`}>Priority</Label>
+                  <Select
+                    value={editedTask.priority}
+                    onValueChange={(value) =>
+                      setEditedTask({ ...editedTask, priority: value })
+                    }
+                  >
+                    <SelectTrigger id={`task-priority-${task.id}`}>
+                      <SelectValue placeholder="Select priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Urgent</SelectItem>
+                      <SelectItem value="2">Important</SelectItem>
+                      <SelectItem value="3">Medium</SelectItem>
+                      <SelectItem value="4">Low</SelectItem>
+                      <SelectItem value="5">Very Low</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             ) : (
               <>
                 <div className="flex items-start gap-3">
                   <h3 className="text-lg font-semibold">{task.title}</h3>
-                  <Badge
-                    variant="outline"
-                    className={getPriorityColor(task.priority)}
-                  >
+                  <Badge variant={getPriorityVariant(task.priority)}>
                     {getPriorityLabel(task.priority)}
                   </Badge>
                 </div>
@@ -148,7 +210,7 @@ export function TaskReviewCard({
                   size="sm"
                   variant="ghost"
                   onClick={() => onDelete(task.id)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -159,31 +221,84 @@ export function TaskReviewCard({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Checklist Items */}
-        {task.details.checklist_items.length > 0 && (
-          <div className="space-y-2">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-medium">
               <CheckSquare className="h-4 w-4" />
               Checklist Items
             </div>
-            <ul className="space-y-1">
-              {task.details.checklist_items.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="text-sm text-muted-foreground flex items-start gap-2"
-                >
-                  <span className="text-blue-500">•</span>
-                  {item.title}
-                </li>
-              ))}
-            </ul>
+            {isEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAddChecklistItem}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add Item
+              </Button>
+            )}
           </div>
-        )}
+          {isEditing ? (
+            <div className="space-y-2">
+              {editedTask.details.checklist_items.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2"
+                >
+                  <Input
+                    value={item.title}
+                    onChange={(e) =>
+                      handleUpdateChecklistItem(idx, e.target.value)
+                    }
+                    placeholder="Checklist item..."
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveChecklistItem(idx)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              {editedTask.details.checklist_items.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No checklist items. Click "Add Item" to create one.
+                </p>
+              )}
+            </div>
+          ) : (
+            <>
+              {task.details.checklist_items.length > 0 ? (
+                <ul className="space-y-1">
+                  {task.details.checklist_items.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="text-sm text-muted-foreground flex items-start gap-2"
+                    >
+                      <span className="text-primary">•</span>
+                      {item.title}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No checklist items
+                </p>
+              )}
+            </>
+          )}
+        </div>
 
         {/* Due Date and Assignee */}
         <div className="flex flex-wrap gap-4 text-sm">
           {isEditing ? (
             <>
-              <div className="flex-1 min-w-[200px]">
+              <div className="flex-1 min-w-[200px] space-y-2">
                 <Label htmlFor={`task-date-${task.id}`}>Due Date</Label>
                 <Input
                   id={`task-date-${task.id}`}
@@ -194,29 +309,31 @@ export function TaskReviewCard({
                   }
                 />
               </div>
-              <div className="flex-1 min-w-[200px]">
+              <div className="flex-1 min-w-[200px] space-y-2">
                 <Label htmlFor={`task-assignee-${task.id}`}>Assignee</Label>
-                <select
-                  id={`task-assignee-${task.id}`}
+                <Select
                   value={editedTask.assignee_id || ""}
-                  onChange={(e) =>
+                  onValueChange={(value) =>
                     setEditedTask({
                       ...editedTask,
-                      assignee_id: e.target.value,
+                      assignee_id: value,
                     })
                   }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <option value="">Select assignee</option>
-                  {users.map((user) => (
-                    <option
-                      key={user.id}
-                      value={user.id}
-                    >
-                      {user.full_name || user.email}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger id={`task-assignee-${task.id}`}>
+                    <SelectValue placeholder="Select assignee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users.map((user) => (
+                      <SelectItem
+                        key={user.id}
+                        value={user.id}
+                      >
+                        {user.full_name || user.email}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </>
           ) : (
