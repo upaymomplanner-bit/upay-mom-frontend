@@ -92,9 +92,7 @@ export function CityOverviewCard({ data, isLoading }: CityOverviewCardProps) {
                   <Clock className="h-3 w-3 mr-1" />
                   {city.in_progress_tasks} in progress
                 </Badge>
-                <Badge variant="outline">
-                  {city.todo_tasks} todo
-                </Badge>
+                <Badge variant="outline">{city.todo_tasks} todo</Badge>
                 {city.overdue_tasks > 0 && (
                   <Badge variant="destructive">
                     <AlertTriangle className="h-3 w-3 mr-1" />

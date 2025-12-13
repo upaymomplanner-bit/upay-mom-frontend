@@ -20,7 +20,9 @@ function formatHours(hours: number | null): string {
   return `${days}d ${remainingHours.toFixed(0)}h`;
 }
 
-function getPriorityVariant(priority: string): "default" | "secondary" | "destructive" | "outline" {
+function getPriorityVariant(
+  priority: string
+): "default" | "secondary" | "destructive" | "outline" {
   switch (priority) {
     case "urgent":
       return "destructive";

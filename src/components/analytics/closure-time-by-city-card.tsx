@@ -92,15 +92,9 @@ export function ClosureTimeByCityCard({
                 <TableHead className="text-center text-destructive">
                   Urgent
                 </TableHead>
-                <TableHead className="text-center">
-                  Important
-                </TableHead>
-                <TableHead className="text-center">
-                  Medium
-                </TableHead>
-                <TableHead className="text-center">
-                  Low
-                </TableHead>
+                <TableHead className="text-center">Important</TableHead>
+                <TableHead className="text-center">Medium</TableHead>
+                <TableHead className="text-center">Low</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

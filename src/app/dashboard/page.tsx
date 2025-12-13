@@ -45,16 +45,17 @@ export default async function DashboardPage() {
                 <Upload className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">
-                  Upload Meeting Transcript
-                </h3>
+                <h3 className="text-xl font-bold">Upload Meeting Transcript</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Let AI automatically extract tasks and goals from your meeting
                   minutes
                 </p>
               </div>
             </div>
-            <Button asChild size="lg">
+            <Button
+              asChild
+              size="lg"
+            >
               <Link href="/dashboard/upload">Upload Now</Link>
             </Button>
           </div>

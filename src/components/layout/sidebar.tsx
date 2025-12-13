@@ -60,7 +60,10 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link href="/dashboard" className="flex items-center gap-2 px-2 py-4">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-2 py-4"
+        >
           <h1 className="text-xl font-bold">UPAY MoM</h1>
         </Link>
       </SidebarHeader>

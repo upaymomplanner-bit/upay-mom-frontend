@@ -162,9 +162,7 @@ export default function UploadPage() {
               <div className="flex items-center gap-3 p-4 bg-accent border border-border rounded-lg">
                 <FileText className="h-10 w-10 text-primary" />
                 <div className="flex-1">
-                  <p className="font-medium">
-                    {file.name}
-                  </p>
+                  <p className="font-medium">{file.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {(file.size / 1024).toFixed(2)} KB
                   </p>
@@ -181,7 +179,9 @@ export default function UploadPage() {
 
             {/* Status Messages */}
             {status && (
-              <Alert variant={status.type === "error" ? "destructive" : "default"}>
+              <Alert
+                variant={status.type === "error" ? "destructive" : "default"}
+              >
                 {status.type === "success" ? (
                   <CheckCircle2 className="h-4 w-4" />
                 ) : (
@@ -222,12 +222,15 @@ export default function UploadPage() {
                 <ol className="space-y-2 mt-2 text-sm">
                   <li className="flex items-start gap-2">
                     <span className="font-bold">1.</span>
-                    <span>Upload your meeting minutes as a PDF or TXT file</span>
+                    <span>
+                      Upload your meeting minutes as a PDF or TXT file
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-bold">2.</span>
                     <span>
-                      Our AI will analyze the transcript and extract action items
+                      Our AI will analyze the transcript and extract action
+                      items
                     </span>
                   </li>
                   <li className="flex items-start gap-2">

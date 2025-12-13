@@ -108,9 +108,7 @@ export default async function MeetingsPage() {
                         </div>
                       </div>
                     </div>
-                    <Badge variant="secondary">
-                      {meeting.status}
-                    </Badge>
+                    <Badge variant="secondary">{meeting.status}</Badge>
                   </div>
                 </CardHeader>
               </Card>
@@ -151,9 +149,7 @@ export default async function MeetingsPage() {
                         </div>
                       </div>
                     </div>
-                    <Badge variant="outline">
-                      {meeting.status}
-                    </Badge>
+                    <Badge variant="outline">{meeting.status}</Badge>
                   </div>
                 </CardHeader>
               </Card>

@@ -40,7 +40,9 @@ export function TaskReviewCard({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
 
-  const getPriorityVariant = (priority: string): "default" | "secondary" | "destructive" | "outline" => {
+  const getPriorityVariant = (
+    priority: string
+  ): "default" | "secondary" | "destructive" | "outline" => {
     const priorityNum = parseInt(priority);
     if (priorityNum <= 2) return "destructive";
     if (priorityNum === 3) return "secondary";
@@ -213,7 +215,10 @@ export function TaskReviewCard({
                   </SelectTrigger>
                   <SelectContent>
                     {users.map((user) => (
-                      <SelectItem key={user.id} value={user.id}>
+                      <SelectItem
+                        key={user.id}
+                        value={user.id}
+                      >
                         {user.full_name || user.email}
                       </SelectItem>
                     ))}
