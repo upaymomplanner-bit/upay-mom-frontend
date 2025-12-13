@@ -24,10 +24,10 @@ export function MeetingSummaryCard({
 }: MeetingSummaryCardProps) {
   return (
     <Card className="border-2">
-      <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
+      <CardHeader className="bg-muted/50">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-500 rounded-lg">
-            <FileText className="h-6 w-6 text-white" />
+          <div className="p-2 bg-primary rounded-lg">
+            <FileText className="h-6 w-6 text-primary-foreground" />
           </div>
           <CardTitle>Meeting Details</CardTitle>
         </div>

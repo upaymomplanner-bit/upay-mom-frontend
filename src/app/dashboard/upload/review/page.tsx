@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertCircle,
   CheckCircle2,
@@ -252,39 +253,17 @@ export default function ReviewPage() {
 
       {/* Status Messages */}
       {status && (
-        <div
-          className={`flex items-start gap-3 p-4 rounded-lg ${
-            status.type === "success"
-              ? "bg-green-50 border border-green-200 dark:bg-green-950 dark:border-green-800"
-              : "bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-800"
-          }`}
-        >
+        <Alert variant={status.type === "error" ? "destructive" : "default"}>
           {status.type === "success" ? (
-            <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <CheckCircle2 className="h-4 w-4" />
           ) : (
-            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="h-4 w-4" />
           )}
-          <div>
-            <p
-              className={`font-medium ${
-                status.type === "success"
-                  ? "text-green-900 dark:text-green-100"
-                  : "text-red-900 dark:text-red-100"
-              }`}
-            >
-              {status.type === "success" ? "Success!" : "Error"}
-            </p>
-            <p
-              className={`text-sm ${
-                status.type === "success"
-                  ? "text-green-700 dark:text-green-300"
-                  : "text-red-700 dark:text-red-300"
-              }`}
-            >
-              {status.message}
-            </p>
-          </div>
-        </div>
+          <AlertTitle>
+            {status.type === "success" ? "Success!" : "Error"}
+          </AlertTitle>
+          <AlertDescription>{status.message}</AlertDescription>
+        </Alert>
       )}
 
       {/* Meeting Summary */}

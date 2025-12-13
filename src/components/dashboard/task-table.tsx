@@ -58,13 +58,12 @@ export function TaskTable({ tasks }: TaskTableProps) {
               </TableCell>
               <TableCell>
                 <Badge
-                  variant="outline"
-                  className={
+                  variant={
                     task.priority === "urgent"
-                      ? "text-red-500 border-red-500"
+                      ? "destructive"
                       : task.priority === "important"
-                      ? "text-orange-500 border-orange-500"
-                      : "text-zinc-500"
+                      ? "secondary"
+                      : "outline"
                   }
                 >
                   {task.priority}

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Users } from "lucide-react";
 import { format } from "date-fns";
 
@@ -107,9 +108,9 @@ export default async function MeetingsPage() {
                         </div>
                       </div>
                     </div>
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                    <Badge variant="secondary">
                       {meeting.status}
-                    </span>
+                    </Badge>
                   </div>
                 </CardHeader>
               </Card>
@@ -150,9 +151,9 @@ export default async function MeetingsPage() {
                         </div>
                       </div>
                     </div>
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                    <Badge variant="outline">
                       {meeting.status}
-                    </span>
+                    </Badge>
                   </div>
                 </CardHeader>
               </Card>

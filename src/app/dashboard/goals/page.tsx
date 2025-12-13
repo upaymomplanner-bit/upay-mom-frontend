@@ -48,7 +48,7 @@ export default async function GoalsPage() {
               </Badge>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
+              <p className="text-sm text-muted-foreground line-clamp-2">
                 {goal.description}
               </p>
               <div className="space-y-2">

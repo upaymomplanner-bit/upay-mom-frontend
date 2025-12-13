@@ -6,6 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { EditableTask } from "@/types/meeting";
 import {
   Pencil,
@@ -33,12 +40,11 @@ export function TaskReviewCard({
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityVariant = (priority: string): "default" | "secondary" | "destructive" | "outline" => {
     const priorityNum = parseInt(priority);
-    if (priorityNum <= 2) return "bg-red-100 text-red-800 border-red-300";
-    if (priorityNum === 3)
-      return "bg-yellow-100 text-yellow-800 border-yellow-300";
-    return "bg-green-100 text-green-800 border-green-300";
+    if (priorityNum <= 2) return "destructive";
+    if (priorityNum === 3) return "secondary";
+    return "outline";
   };
 
   const getPriorityLabel = (priority: string) => {
@@ -102,10 +108,7 @@ export function TaskReviewCard({
               <>
                 <div className="flex items-start gap-3">
                   <h3 className="text-lg font-semibold">{task.title}</h3>
-                  <Badge
-                    variant="outline"
-                    className={getPriorityColor(task.priority)}
-                  >
+                  <Badge variant={getPriorityVariant(task.priority)}>
                     {getPriorityLabel(task.priority)}
                   </Badge>
                 </div>
@@ -148,7 +151,7 @@ export function TaskReviewCard({
                   size="sm"
                   variant="ghost"
                   onClick={() => onDelete(task.id)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -171,7 +174,7 @@ export function TaskReviewCard({
                   key={idx}
                   className="text-sm text-muted-foreground flex items-start gap-2"
                 >
-                  <span className="text-blue-500">•</span>
+                  <span className="text-primary">•</span>
                   {item.title}
                 </li>
               ))}
@@ -196,27 +199,26 @@ export function TaskReviewCard({
               </div>
               <div className="flex-1 min-w-[200px]">
                 <Label htmlFor={`task-assignee-${task.id}`}>Assignee</Label>
-                <select
-                  id={`task-assignee-${task.id}`}
+                <Select
                   value={editedTask.assignee_id || ""}
-                  onChange={(e) =>
+                  onValueChange={(value) =>
                     setEditedTask({
                       ...editedTask,
-                      assignee_id: e.target.value,
+                      assignee_id: value,
                     })
                   }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <option value="">Select assignee</option>
-                  {users.map((user) => (
-                    <option
-                      key={user.id}
-                      value={user.id}
-                    >
-                      {user.full_name || user.email}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger id={`task-assignee-${task.id}`}>
+                    <SelectValue placeholder="Select assignee" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users.map((user) => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.full_name || user.email}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </>
           ) : (

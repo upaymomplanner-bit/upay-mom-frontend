@@ -20,18 +20,18 @@ function formatHours(hours: number | null): string {
   return `${days}d ${remainingHours.toFixed(0)}h`;
 }
 
-function getPriorityColor(priority: string) {
+function getPriorityVariant(priority: string): "default" | "secondary" | "destructive" | "outline" {
   switch (priority) {
     case "urgent":
-      return "bg-red-100 text-red-800 border-red-300";
+      return "destructive";
     case "important":
-      return "bg-orange-100 text-orange-800 border-orange-300";
+      return "secondary";
     case "medium":
-      return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      return "secondary";
     case "low":
-      return "bg-green-100 text-green-800 border-green-300";
+      return "outline";
     default:
-      return "bg-gray-100 text-gray-800 border-gray-300";
+      return "outline";
   }
 }
 
@@ -71,8 +71,8 @@ export function ClosureTimeCard({
                 key={i}
                 className="animate-pulse flex justify-between"
               >
-                <div className="h-6 bg-gray-200 rounded w-20"></div>
-                <div className="h-6 bg-gray-200 rounded w-16"></div>
+                <div className="h-6 bg-muted rounded w-20"></div>
+                <div className="h-6 bg-muted rounded w-16"></div>
               </div>
             ))}
           </div>
@@ -117,10 +117,7 @@ export function ClosureTimeCard({
                 className="flex items-center justify-between p-2 rounded-lg border"
               >
                 <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={getPriorityColor(item.priority)}
-                  >
+                  <Badge variant={getPriorityVariant(item.priority)}>
                     {getPriorityIcon(item.priority)}
                     <span className="ml-1 capitalize">{item.priority}</span>
                   </Badge>

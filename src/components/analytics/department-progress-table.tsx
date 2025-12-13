@@ -45,7 +45,7 @@ export function DepartmentProgressTable({
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="animate-pulse h-12 bg-gray-200 rounded"
+                className="animate-pulse h-12 bg-muted rounded"
               ></div>
             ))}
           </div>
@@ -119,7 +119,7 @@ export function DepartmentProgressTable({
                           {dept.department_name}
                         </TableCell>
                         <TableCell className="text-center">
-                          <span className="text-green-600">
+                          <span className="text-primary font-medium">
                             {dept.completed_tasks}
                           </span>
                           <span className="text-muted-foreground">
@@ -140,7 +140,7 @@ export function DepartmentProgressTable({
                         </TableCell>
                         <TableCell className="text-center">
                           {dept.overdue_tasks > 0 ? (
-                            <span className="text-red-600 font-medium">
+                            <span className="text-destructive font-medium">
                               {dept.overdue_tasks}
                             </span>
                           ) : (
