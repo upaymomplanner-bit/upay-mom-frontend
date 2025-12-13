@@ -23,6 +23,7 @@ import type {
   EditableTaskGroup,
   EditableTask,
   PlanAssociation,
+  Goal,
 } from "@/types/meeting";
 import { TaskReviewCard } from "./task-review-card";
 import {
@@ -39,6 +40,7 @@ import {
 interface TaskGroupSectionProps {
   taskGroup: EditableTaskGroup;
   users: Array<{ id: string; full_name: string; email: string }>;
+  goals: Goal[];
   onUpdateTask: (
     groupIndex: number,
     taskIndex: number,
@@ -53,6 +55,7 @@ interface TaskGroupSectionProps {
 export function TaskGroupSection({
   taskGroup,
   users,
+  goals,
   onUpdateTask,
   onDeleteTask,
   onUpdateGroup,
@@ -135,7 +138,7 @@ export function TaskGroupSection({
                         <SelectContent>
                           <SelectItem value="new">New Plan</SelectItem>
                           <SelectItem value="existing">
-                            Existing Plan
+                            Existing Goal/Plan
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -143,21 +146,60 @@ export function TaskGroupSection({
 
                     <div className="space-y-2">
                       <Label htmlFor={`plan-reference-${groupIndex}`}>
-                        Plan Reference (Optional)
+                        Select Goal/Plan
                       </Label>
-                      <Input
-                        id={`plan-reference-${groupIndex}`}
-                        value={
-                          editedGroup.plan_association.plan_reference || ""
-                        }
-                        onChange={(e) =>
-                          handleUpdatePlanAssociation(
-                            "plan_reference",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter reference ID or name"
-                      />
+                      {editedGroup.plan_association.association_type ===
+                      "existing" ? (
+                        <Select
+                          value={
+                            editedGroup.plan_association.plan_reference || ""
+                          }
+                          onValueChange={(value: string) => {
+                            handleUpdatePlanAssociation(
+                              "plan_reference",
+                              value
+                            );
+                            // Auto-update title to match selected goal
+                            const selectedGoal = goals.find(
+                              (g) => g.id === value
+                            );
+                            if (selectedGoal) {
+                              handleUpdatePlanAssociation(
+                                "plan_title",
+                                selectedGoal.title
+                              );
+                            }
+                          }}
+                        >
+                          <SelectTrigger id={`plan-reference-${groupIndex}`}>
+                            <SelectValue placeholder="Select a goal..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {goals.map((goal) => (
+                              <SelectItem
+                                key={goal.id}
+                                value={goal.id}
+                              >
+                                {goal.title} ({goal.year} Q{goal.quarter})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          id={`plan-reference-${groupIndex}`}
+                          value={
+                            editedGroup.plan_association.plan_reference || ""
+                          }
+                          onChange={(e) =>
+                            handleUpdatePlanAssociation(
+                              "plan_reference",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter reference ID or name"
+                        />
+                      )}
                     </div>
 
                     <div className="space-y-2">
@@ -242,7 +284,7 @@ export function TaskGroupSection({
                       >
                         {taskGroup.plan_association.association_type === "new"
                           ? "New Plan"
-                          : "Existing Plan"}
+                          : "Existing Goal"}
                       </Badge>
                       <Button
                         variant="ghost"

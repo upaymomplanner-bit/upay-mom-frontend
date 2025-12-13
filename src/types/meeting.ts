@@ -9,6 +9,14 @@ export interface Assignment {
   assignee_email: string | null;
 }
 
+export interface Goal {
+  id: string;
+  title: string;
+  year: number;
+  quarter: number;
+  department_id: string | null;
+}
+
 export interface TaskDetails {
   description: string;
   checklist_items: ChecklistItem[];

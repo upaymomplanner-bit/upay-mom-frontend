@@ -17,10 +17,11 @@ import type {
   EditableMeetingData,
   EditableTaskGroup,
   EditableTask,
+  Goal,
 } from "@/types/meeting";
 import { MeetingSummaryCard } from "@/components/review/meeting-summary-card";
 import { TaskGroupSection } from "@/components/review/task-group-section";
-import { saveMeetingData, getUsers } from "@/app/actions/upload";
+import { saveMeetingData, getUsers, getGoals } from "@/app/actions/upload";
 import { generateTempId } from "@/lib/utils/meeting";
 
 export default function ReviewPage() {
@@ -31,6 +32,7 @@ export default function ReviewPage() {
   const [users, setUsers] = useState<
     Array<{ id: string; full_name: string; email: string }>
   >([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<{
     type: "success" | "error";
@@ -69,14 +71,22 @@ export default function ReviewPage() {
       });
     }
 
-    // Load users for assignee dropdown
-    loadUsers();
+    // Load users and goals
+    loadData();
   }, [router]);
 
-  const loadUsers = async () => {
-    const result = await getUsers();
-    if (result.success && result.data) {
-      setUsers(result.data);
+  const loadData = async () => {
+    const [usersResult, goalsResult] = await Promise.all([
+      getUsers(),
+      getGoals(),
+    ]);
+
+    if (usersResult.success && usersResult.data) {
+      setUsers(usersResult.data);
+    }
+
+    if (goalsResult.success && goalsResult.data) {
+      setGoals(goalsResult.data);
     }
   };
 
@@ -357,6 +367,7 @@ export default function ReviewPage() {
             key={groupIndex}
             taskGroup={group}
             users={users}
+            goals={goals}
             onUpdateTask={handleUpdateTask}
             onDeleteTask={handleDeleteTask}
             onUpdateGroup={handleUpdateGroup}
