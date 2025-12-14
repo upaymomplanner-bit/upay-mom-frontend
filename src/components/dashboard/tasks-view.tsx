@@ -23,53 +23,15 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-
-interface ChecklistItem {
-  title: string;
-}
-
-interface TaskMetadata {
-  plan_title?: string;
-  assignee_names?: string[];
-  checklist_items?: ChecklistItem[];
-}
-
-interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  status: string;
-  priority: string;
-  due_date: string | null;
-  metadata: TaskMetadata | null;
-  meeting:
-    | { id: string; title: string }
-    | { id: string; title: string }[]
-    | null;
-  assignee:
-    | { full_name: string | null; email: string }
-    | { full_name: string | null; email: string }[]
-    | null;
-}
-
-// Normalized task type after processing
-interface NormalizedTask {
-  id: string;
-  title: string;
-  description: string | null;
-  status: string;
-  priority: string;
-  due_date: string | null;
-  metadata: TaskMetadata;
-  meeting: { id: string; title: string } | null;
-  assignee: { full_name: string | null; email: string } | null;
-}
+import type {
+  TaskWithRelations,
+  NormalizedTask,
+  StatusFilter,
+} from "@/types/task";
 
 interface TasksViewProps {
-  tasks: Task[];
+  tasks: TaskWithRelations[];
 }
-
-type StatusFilter = "all" | "todo" | "in_progress" | "completed";
 
 // Helper to normalize Supabase relation data (handles both single object and array formats)
 function normalizeRelation<T>(data: T | T[] | null): T | null {
@@ -89,12 +51,14 @@ export function TasksView({ tasks: rawTasks }: TasksViewProps) {
 
   // Normalize tasks to handle Supabase array relations
   const tasks: NormalizedTask[] = useMemo(() => {
-    return rawTasks.map((task) => ({
-      ...task,
-      meeting: normalizeRelation(task.meeting),
-      assignee: normalizeRelation(task.assignee),
-      metadata: task.metadata || {},
-    }));
+    return rawTasks.map(
+      (task): NormalizedTask => ({
+        ...task,
+        meeting: normalizeRelation(task.meeting),
+        assignee: normalizeRelation(task.assignee),
+        metadata: task.metadata || {},
+      })
+    );
   }, [rawTasks]);
 
   // Filter tasks based on search and status
