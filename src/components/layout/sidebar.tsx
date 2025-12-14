@@ -59,17 +59,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 px-2 py-4"
+          className="flex items-center"
         >
           <h1 className="text-xl font-bold">UPAY MoM</h1>
         </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-4">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {routes.map((route) => (

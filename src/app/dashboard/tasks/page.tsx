@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { TasksView } from "@/components/dashboard/tasks-view";
+import type { TaskWithRelations } from "@/types/task";
 
 export default async function TasksPage() {
   const supabase = await createClient();
@@ -26,5 +27,5 @@ export default async function TasksPage() {
     console.error("Error fetching tasks:", error);
   }
 
-  return <TasksView tasks={tasks || []} />;
+  return <TasksView tasks={(tasks as TaskWithRelations[]) || []} />;
 }
