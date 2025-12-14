@@ -44,7 +44,7 @@ export default async function GoalsPage() {
                     : "secondary"
                 }
               >
-                {goal.status.replace("_", " ")}
+                {goal.status?.replace("_", " ") || "Not Set"}
               </Badge>
             </CardHeader>
             <CardContent className="space-y-4">
